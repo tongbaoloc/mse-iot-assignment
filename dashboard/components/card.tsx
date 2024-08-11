@@ -5,7 +5,7 @@ const Card: React.FC<{ title: string; children: React.ReactNode }> = ({
   children,
 }) => {
   return (
-    <div className="bg-white p-4 shadow-lg rounded-lg">
+    <div className="bg-white dark:bg-inherit p-4 shadow-lg rounded-lg">
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
       <div>{children}</div>
     </div>
