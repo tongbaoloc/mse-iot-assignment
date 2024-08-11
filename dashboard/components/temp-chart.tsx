@@ -38,7 +38,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function TempChart() {
+export default function TempChart() {
   const [chartData, setChartData] = React.useState(initialChartData);
 
   React.useEffect(() => {
