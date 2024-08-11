@@ -7,7 +7,7 @@ import VideoStreaming from "@/components/video-streaming";
 export default function Home() {
   return (
     <main className="">
-      <div className="min-h-screen p-8">
+      <div className="min-h-screen p-8 ">
         <h1 className="text-3xl font-bold mb-8">IoT Monitoring Dashboard</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <MotionCard title="Humidity" children={<Humidity />} />
