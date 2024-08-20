@@ -52,8 +52,10 @@ export default function Humidity() {
           throw new Error("AWS configuration is missing.");
         }
 
+
         // Await the endpoint creation
         const endpointUrl = await SigV4Utils.createWebSocketURL(
+
           region,
           endpoint,
           accessKey,
@@ -61,13 +63,21 @@ export default function Humidity() {
         );
 
         const clientId = Math.random().toString(36).substring(7);
-        const mqttClient = new Paho.Client(endpointUrl, clientId);
+        const mqttClient = new Paho.Client(endpointUrl.replace("wss://", "ws://"), clientId);
+
         const connectOptions = {
-          useSSL: true,
+          useSSL: false,
+          mqttVersion: 4, // Ensure SSL is disabled
+          // timeout: 3,
+          invocationContext: { host: endpointUrl },
           onSuccess: () => subscribe(mqttClient),
-          onFailure: (error: any) => console.error("Connection failed:", error),
+          onFailure: (e: any) => { 
+            debugger
+            console.error("Connection failed:", e);
+          }
         };
 
+        debugger
         mqttClient.connect(connectOptions);
         mqttClient.onMessageArrived = onMessage;
         mqttClient.onConnectionLost = (e: any) =>
@@ -87,13 +97,14 @@ export default function Humidity() {
   }, []);
 
   function subscribe(client: Paho.Client) {
+    debugger
     client?.subscribe("things/dht11_01");
-    console.log("subscribed");
+    console.log("Subscribed to topic: things/dht11_01");
   }
 
   function onMessage(message: Paho.Message) {
     const status = JSON.parse(message.payloadString);
-    console.log(status);
+    console.log("Message received:", status);
     // Handle message data, e.g., update chartData here
   }
 

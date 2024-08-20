@@ -92,7 +92,9 @@ export const SigV4Utils = {
         )}`;
       }
 
+
       return `wss://${host}${canonicalUri}?${canonicalQuerystring}`;
+
     } catch (error) {
       console.error("Error generating WebSocket URL:", error);
       throw error;
