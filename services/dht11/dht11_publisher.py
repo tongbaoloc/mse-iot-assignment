@@ -15,7 +15,7 @@ PATH_TO_ROOT = "AmazonRootCA1.pem"
 TOPIC = "things/dht11_01"
 
 # Sensor Setup
-dht_pin = board.D4  # GPIO4
+dht_pin = board.D22 # GPIO22
 dht_sensor = adafruit_dht.DHT11(dht_pin)
 
 # MQTT Setup
