@@ -13,10 +13,10 @@ const clientId = `clientId-${Math.random().toString(36).substring(2, 15)}`; // U
 async function connectAndSubscribe() {
   try {
     const url = await SigV4Utils.createWebSocketURL(
-      "ap-southeast-1", // YOUR REGION
-      "a1kfygo2s7d0ba-ats.iot.ap-southeast-1.amazonaws.com", // YOUR IoT ENDPOINT
-      "AKIATZQUBAUZI23ABI74", // YOUR ACCESS KEY
-      "xhIaUvTaRHw41zfRg2g1DY0fkg5J0CoJz6m3NZHU" // YOUR SECRET ACCESS KEY
+      "", // YOUR REGION
+      "", // YOUR IoT ENDPOINT
+      "", // YOUR ACCESS KEY
+      "" // YOUR SECRET ACCESS KEY
     );
     console.log("WebSocket URL:", url);
 
