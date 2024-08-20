@@ -7,7 +7,7 @@ import adafruit_dht
 import board
 import sys
 
-from pymongo import MongoClient
+
 from datetime import datetime 
 
 # Configuration Parameters
@@ -28,27 +28,45 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(FAN_PIN, GPIO.OUT)
 GPIO.setup(TEMPERATURE_LIGHT_PIN, GPIO.OUT)
 
+#cau hinh
+config_json = """
+{
+    "actiondate": {
+        "begindate": "20/08/2024"
+    },
+    "incubator_setting": [
+        {"day": 1, "temp": 37.8, "humid": 60, "to_humid": 61},
+        {"day": 2, "temp": 37.8, "humid": 60, "to_humid": 61},
+        {"day": 3, "temp": 37.8, "humid": 60, "to_humid": 61},
+        {"day": 4, "temp": 37.8, "humid": 60, "to_humid": 61},
+        {"day": 5, "temp": 37.8, "humid": 60, "to_humid": 61},
+        {"day": 6, "temp": 37.8, "humid": 55, "to_humid": 57},
+        {"day": 7, "temp": 37.8, "humid": 55, "to_humid": 57},
+        {"day": 8, "temp": 37.6, "humid": 55, "to_humid": 57},
+        {"day": 9, "temp": 37.6, "humid": 55, "to_humid": 57},
+        {"day": 10, "temp": 37.6, "humid": 55, "to_humid": 57},
+        {"day": 11, "temp": 37.6, "humid": 55, "to_humid": 57},
+        {"day": 12, "temp": 37.6, "humid": 50, "to_humid": 53},
+        {"day": 13, "temp": 37.6, "humid": 50, "to_humid": 53},
+        {"day": 14, "temp": 37.6, "humid": 50, "to_humid": 53},
+        {"day": 15, "temp": 37.6, "humid": 50, "to_humid": 53},
+        {"day": 16, "temp": 37.6, "humid": 50, "to_humid": 53},
+        {"day": 17, "temp": 37.6, "humid": 50, "to_humid": 53},
+        {"day": 18, "temp": 37.6, "humid": 50, "to_humid": 53},
+        {"day": 19, "temp": 37.2, "humid": 60, "to_humid": 60},
+        {"day": 20, "temp": 37.2, "humid": 70, "to_humid": 75},
+        {"day": 21, "temp": 37.2, "humid": 70, "to_humid": 75}
+    ]
+}
+"""
+
+# Parse the JSON string to a Python dictionary
+config_data = json.loads(config_json)
+
+begindate_str = config_data['actiondate']['begindate']
+begindate = datetime.strptime(begindate_str, '%d/%m/%Y')
 
 
-# MongoDB setup
-client = MongoClient("mongodb://localhost:27017/")
-db = client["database_name"]
-
-#actiondate (id,begindate)
-#example: actiondate(0,'2024-08-10')
-actiondate = db["actiondate"]
-
-#incubator_setting(if,day, temp, humid)
-#example: 
-# incubator_setting(0, 1, 37, 60)
-# incubator_setting(0, 2, 37, 60)
-# incubator_setting(0, 3, 37, 60)
-# .....................
-# incubator_setting(9, 10, 37.5, 65)
-# .....................
-# incubator_setting(20 , 21, 37.8, 65)
-
-incubator_setting = db["incubator_setting"]
 
 # subscribe a message topic on AWS IoT Core
 def on_message_received(topic, payload, **kwargs):
@@ -65,39 +83,39 @@ def on_message_received(topic, payload, **kwargs):
         # Get current date
         current_date = datetime.now()
 
-        # Fetch begindate from table1
-        config_data = actiondate.find_one() #{"ID": 0}
-        begindate = datetime.strptime(config_data['begindate'], '%d/%m/%Y')
-        
         # Calculate days since begindate
         day_diff = (current_date - begindate).days + 1   
 
-        # Fetch the settings for the current day from table2
-        settings_data = incubator_setting.find_one({"day": day_diff})
+        # Fetch the settings for the current day from the JSON config
+        settings_data = next((item for item in config_data['incubator_setting'] if item['day'] == day_diff), None)
+
         if settings_data:
             config_temp = settings_data['temp']
             config_humid = settings_data['humid']
+            config_to_humid = settings_data['to_humid']
  
             # Compare real-time data with configured settings
-            print(f"Configured Temp: {config_temp}, Configured Humidity: {config_humid}")
+            print(f"Configured Temp: {config_temp}, Configured Humidity: {config_humid} - To Humidity: {config_to_humid}")
             print(f"Real-time Temp: {temperature}, Real-time Humidity: {humidity}")
              
             if temperature > config_temp:
                 print("Temperature exceeds the limit, turning off LED.")
-                #off Light
+                # Turn off Light
                 GPIO.output(TEMPERATURE_LIGHT_PIN, GPIO.LOW)
-                #turn on Fan
+                # Turn on Fan
                 GPIO.output(FAN_PIN, GPIO.HIGH)
-                # Code to turn off LED
             else:
                 print("Temperature is within the limit, keeping LED on.")
                 GPIO.output(TEMPERATURE_LIGHT_PIN, GPIO.HIGH)
-                # Code to keep LED on
 
-            if humidity != config_humid:
+            if humidity < config_humid or humidity > config_humid :
+                # Turn on Fan
+                GPIO.output(FAN_PIN, GPIO.HIGH)
                 print("Humidity does not match the configuration.")
-                # Code xư ly gi do
-            
+            else:
+                #GPIO.output(FAN_PIN, GPIO.LOW)
+                print("Humidity is within the configured range.")
+
         else:
             print(f"No settings found for day {day_diff}") 
 
