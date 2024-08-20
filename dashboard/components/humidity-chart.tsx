@@ -45,8 +45,6 @@ export default function Humidity() {
   const accessKey = process.env.NEXT_PUBLIC_AWS_ACCESS_KEY;
   const secretKey = process.env.NEXT_PUBLIC_AWS_SECRET_KEY;
 
-  console.log(region, endpoint, accessKey, secretKey);
-
   useEffect(() => {
     const initializeClient = async () => {
       try {
@@ -66,16 +64,15 @@ export default function Humidity() {
         const mqttClient = new Paho.Client(endpointUrl, clientId);
         const connectOptions = {
           useSSL: true,
-          timeout: 3,
-          mqttVersion: 3 as 3 | 4,
           onSuccess: () => subscribe(mqttClient),
+          onFailure: (error: any) => console.error("Connection failed:", error),
         };
 
         mqttClient.connect(connectOptions);
         mqttClient.onMessageArrived = onMessage;
         mqttClient.onConnectionLost = (e: any) =>
           console.log("Connection lost:", e);
-
+  
         setClient(mqttClient);
       } catch (error) {
         console.error("Error initializing MQTT client:", error);

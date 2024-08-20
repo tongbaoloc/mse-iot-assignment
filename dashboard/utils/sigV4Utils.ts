@@ -75,12 +75,14 @@ export const SigV4Utils = {
       const stringToSign = `${algorithm}\n${amzdate}\n${credentialScope}\n${SigV4Utils.sha256(
         canonicalRequest
       )}`;
+
       const signingKey = SigV4Utils.getSignatureKey(
         secretKey,
         dateStamp,
         regionName,
         service
       );
+
       const signature = SigV4Utils.sign(signingKey.toString(), stringToSign);
 
       canonicalQuerystring += `&X-Amz-Signature=${signature}`;
