@@ -1,5 +1,4 @@
 import { STSClient, GetSessionTokenCommand } from "@aws-sdk/client-sts";
-import { fromEnv } from "@aws-sdk/credential-provider-env";
 import CryptoJS from "crypto-js";
 import moment from "moment";
 
@@ -40,7 +39,14 @@ export const SigV4Utils = {
       );
     }
 
-    const stsClient = new STSClient({ credentials: fromEnv() });
+    const stsClient = new STSClient({
+      region: regionName,
+      credentials: {
+        accessKeyId: accessKey,
+        secretAccessKey: secretKey,
+      },
+    });
+      
 
     try {
       const sessionToken = await stsClient.send(new GetSessionTokenCommand({}));
