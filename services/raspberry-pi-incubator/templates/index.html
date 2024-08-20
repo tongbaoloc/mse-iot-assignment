@@ -140,12 +140,12 @@
         var amzdate = dateStamp + "T" + time.format("HHmmss") + "Z";
         var service = "iotdevicegateway";
         var region = "ap-southeast-1";
-        var secretKey = "";
-        var accessKey = "";
+        var secretKey = "xhIaUvTaRHw41zfRg2g1DY0fkg5J0CoJz6m3NZHU";
+        var accessKey = "AKIATZQUBAUZI23ABI74";
         var algorithm = "AWS4-HMAC-SHA256";
         var method = "GET";
         var canonicalUri = "/mqtt";
-        var host = "";
+        var host = "a1kfygo2s7d0ba-ats.iot.ap-southeast-1.amazonaws.com";
         var credentialScope =
           dateStamp + "/" + region + "/" + service + "/" + "aws4_request";
         var canonicalQuerystring = "X-Amz-Algorithm=AWS4-HMAC-SHA256";
@@ -180,7 +180,9 @@
           "ap-southeast-1",
           service
         );
+        
         var signature = SigV4Utils.sign(signingKey, stringToSign);
+
         canonicalQuerystring += "&X-Amz-Signature=" + signature;
         if (AWS.config.credentials && AWS.config.credentials.sessionToken) {
           canonicalQuerystring +=
@@ -189,7 +191,7 @@
         } else {
           console.error("AWS credentials or sessionToken is not available.");
         }
-        return "wss://" + host + canonicalUri + "?" + canonicalQuerystring;
+        return "ws://" + host + canonicalUri + "?" + canonicalQuerystring;
       }
       var endpoint = createEndpoint(
         "", // YOUR REGION
@@ -197,6 +199,8 @@
         "", // YOUR ACCESS KEY
         ""
       ); // YOUR SECRET ACCESS KEY
+
+      console.log(endpoint);
 
       var clientId = Math.random().toString(36).substring(7);
       var client = new Paho.MQTT.Client(endpoint, clientId);

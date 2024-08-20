@@ -100,9 +100,10 @@ export const SigV4Utils = {
       }
 
       console.log(
-        `Generated endpoint URL: wss://${host}${canonicalUri}?${canonicalQuerystring}`
+        `Generated endpoint URL: ws://${host}${canonicalUri}?${canonicalQuerystring}`
       );
-      return `wss://${host}${canonicalUri}?${canonicalQuerystring}`;
+      
+      return `ws://${host}${canonicalUri}?${canonicalQuerystring}`;
     } catch (error) {
       console.error("Error generating endpoint URL:", error);
       throw error;

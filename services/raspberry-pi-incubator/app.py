@@ -12,19 +12,22 @@ DHT11_PIN = 18
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(FAN_PIN, GPIO.OUT)
 GPIO.setup(TEMPERATURE_LIGHT_PIN, GPIO.OUT)
-
-@app.route("/")
-def index():
-    return render_template('index.html')
+GPIO.setup(MOTOR_PIN, GPIO.OUT)
 
 # define a route for the Motor control via relay at MOTOR_PIN
 @app.route("/motor_control", methods=["GET"])
-def fan_control():
+def motor_control():
     if request.args.get('action') == 'On':
         GPIO.output(MOTOR_PIN, GPIO.HIGH)
     elif request.args.get('action') == 'Off':
         GPIO.output(MOTOR_PIN, GPIO.LOW)
-    return render_template('index.html')
+        
+    response = app.response_class(
+            response="{'status': 'success'}",
+            status=200,
+            mimetype='application/json'
+    )
+    return response 
 
 
 # define a route for the Fan control via relay at FAN_PIN
@@ -34,7 +37,14 @@ def fan_control():
         GPIO.output(FAN_PIN, GPIO.HIGH)
     elif request.args.get('action') == 'Off':
         GPIO.output(FAN_PIN, GPIO.LOW)
-    return render_template('index.html')
+        
+    response = app.response_class(
+            response="{'status': 'success'}",
+            status=200,
+            mimetype='application/json'
+    )
+    
+    return response 
 
 # define a route for the Light control via relay at TEMPERATURE_LIGHT_PIN
 @app.route("/light_control", methods=["GET"])
@@ -43,7 +53,13 @@ def light_control():
         GPIO.output(TEMPERATURE_LIGHT_PIN, GPIO.HIGH)
     elif request.args.get('action') == 'Off':
         GPIO.output(TEMPERATURE_LIGHT_PIN, GPIO.LOW)
-    return render_template('index.html')
+        
+    response = app.response_class(
+            response="{'status': 'success'}",
+            status=200,
+            mimetype='application/json'
+    )
+    return response 
 
 if __name__ == "__main__":
 
