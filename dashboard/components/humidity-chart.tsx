@@ -53,7 +53,7 @@ export default function Humidity() {
         }
 
         // Await the endpoint creation
-        const endpointUrl = await SigV4Utils.createEndpoint(
+        const endpointUrl = await SigV4Utils.createWebSocketURL(
           region,
           endpoint,
           accessKey,
@@ -72,7 +72,7 @@ export default function Humidity() {
         mqttClient.onMessageArrived = onMessage;
         mqttClient.onConnectionLost = (e: any) =>
           console.log("Connection lost:", e);
-  
+
         setClient(mqttClient);
       } catch (error) {
         console.error("Error initializing MQTT client:", error);

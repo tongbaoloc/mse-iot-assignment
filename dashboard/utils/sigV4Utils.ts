@@ -26,16 +26,15 @@ export const SigV4Utils = {
     return kSigning;
   },
 
-  async createEndpoint(
+  async createWebSocketURL(
     regionName: string,
     awsIotEndpoint: string,
     accessKey: string,
     secretKey: string
   ) {
-    // Check if parameters are not null or undefined
     if (!regionName || !awsIotEndpoint || !accessKey || !secretKey) {
       throw new Error(
-        "One or more parameters are missing for endpoint creation."
+        "One or more parameters are missing for WebSocket URL creation."
       );
     }
 
@@ -46,14 +45,12 @@ export const SigV4Utils = {
         secretAccessKey: secretKey,
       },
     });
-      
 
     try {
       const sessionToken = await stsClient.send(new GetSessionTokenCommand({}));
-
       const time = moment.utc();
       const dateStamp = time.format("YYYYMMDD");
-      const amzdate = `${dateStamp}T${time.format("HHmmss")}Z`;
+      const amzdate = `${dateStamp}T${time.format("HHMMSS")}Z`;
       const service = "iotdevicegateway";
       const algorithm = "AWS4-HMAC-SHA256";
       const method = "GET";
@@ -61,10 +58,11 @@ export const SigV4Utils = {
       const host = awsIotEndpoint;
       const credentialScope = `${dateStamp}/${regionName}/${service}/aws4_request`;
 
-      let canonicalQuerystring = "X-Amz-Algorithm=AWS4-HMAC-SHA256";
+      let canonicalQuerystring = `X-Amz-Algorithm=${algorithm}`;
       canonicalQuerystring += `&X-Amz-Credential=${encodeURIComponent(
         `${accessKey}/${credentialScope}`
       )}`;
+
       canonicalQuerystring += `&X-Amz-Date=${amzdate}`;
       canonicalQuerystring += "&X-Amz-SignedHeaders=host";
 
@@ -87,24 +85,16 @@ export const SigV4Utils = {
 
       canonicalQuerystring += `&X-Amz-Signature=${signature}`;
 
-      // Ensure sessionToken is properly defined
       if (sessionToken && sessionToken.Credentials) {
         const sessionTokenValue = sessionToken.Credentials.SessionToken || "";
         canonicalQuerystring += `&X-Amz-Security-Token=${encodeURIComponent(
           sessionTokenValue
         )}`;
-      } else {
-        console.error(
-          "sessionToken or sessionToken.Credentials is not available."
-        );
       }
 
-      console.log(
-        `Generated endpoint URL: wss://${host}${canonicalUri}?${canonicalQuerystring}`
-      );
       return `wss://${host}${canonicalUri}?${canonicalQuerystring}`;
     } catch (error) {
-      console.error("Error generating endpoint URL:", error);
+      console.error("Error generating WebSocket URL:", error);
       throw error;
     }
   },
