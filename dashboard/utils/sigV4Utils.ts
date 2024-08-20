@@ -1,5 +1,4 @@
 import { STSClient, GetSessionTokenCommand } from "@aws-sdk/client-sts";
-import { fromEnv } from "@aws-sdk/credential-provider-env";
 import CryptoJS from "crypto-js";
 import moment from "moment";
 
@@ -40,7 +39,14 @@ export const SigV4Utils = {
       );
     }
 
-    const stsClient = new STSClient({ credentials: fromEnv() });
+    const stsClient = new STSClient({
+      region: regionName,
+      credentials: {
+        accessKeyId: accessKey,
+        secretAccessKey: secretKey,
+      },
+    });
+      
 
     try {
       const sessionToken = await stsClient.send(new GetSessionTokenCommand({}));
@@ -69,12 +75,14 @@ export const SigV4Utils = {
       const stringToSign = `${algorithm}\n${amzdate}\n${credentialScope}\n${SigV4Utils.sha256(
         canonicalRequest
       )}`;
+
       const signingKey = SigV4Utils.getSignatureKey(
         secretKey,
         dateStamp,
         regionName,
         service
       );
+
       const signature = SigV4Utils.sign(signingKey.toString(), stringToSign);
 
       canonicalQuerystring += `&X-Amz-Signature=${signature}`;
