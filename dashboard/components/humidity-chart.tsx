@@ -52,8 +52,10 @@ export default function Humidity() {
           throw new Error("AWS configuration is missing.");
         }
 
-        // Create signed URL for WebSocket connection
-        const endpointUrl = await SigV4Utils.createEndpoint(
+
+        // Await the endpoint creation
+        const endpointUrl = await SigV4Utils.createWebSocketURL(
+
           region,
           endpoint,
           accessKey,
