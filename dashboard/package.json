@@ -6,7 +6,8 @@
     "dev": "next dev -p 7979",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "dev-https": "next dev --experimental-https -p 7979"
   },
   "dependencies": {
     "@aws-sdk/client-sts": "^3.632.0",
