@@ -2,8 +2,10 @@
 import AWSIoT from "aws-iot-device-sdk";
 
 export function createIoTDevice() {
+
   const region = "ap-southeast-1";
   const host = process.env.NEXT_PUBLIC_AWS_IOT_HOST; // Use environment variable for the host
+
 
   return new AWSIoT.device({
     region,
