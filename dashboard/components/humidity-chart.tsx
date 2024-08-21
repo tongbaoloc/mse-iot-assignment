@@ -18,9 +18,6 @@ import {
 } from "@/components/ui/card";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 
-import * as Paho from "paho-mqtt";
-import { SigV4Utils } from "../utils/sigV4Utils";
-
 const initialData = [
   { type: "humidity", temp: 89, fill: "var(--color-safari)" },
 ];
@@ -36,77 +33,8 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function Humidity() {
-  const [client, setClient] = useState<Paho.Client | null>(null);
   const [chartData, setChartData] = useState(initialData);
   const [lastUpdated, setLastUpdated] = useState(new Date());
-
-  const region = process.env.NEXT_PUBLIC_AWS_REGION;
-  const endpoint = process.env.NEXT_PUBLIC_AWS_IOT_ENDPOINT;
-  const accessKey = process.env.NEXT_PUBLIC_AWS_ACCESS_KEY;
-  const secretKey = process.env.NEXT_PUBLIC_AWS_SECRET_KEY;
-
-  useEffect(() => {
-    const initializeClient = async () => {
-      try {
-        if (!region || !endpoint || !accessKey || !secretKey) {
-          throw new Error("AWS configuration is missing.");
-        }
-
-
-        // Await the endpoint creation
-        const endpointUrl = await SigV4Utils.createWebSocketURL(
-
-          region,
-          endpoint,
-          accessKey,
-          secretKey
-        );
-
-        const clientId = Math.random().toString(36).substring(7);
-        const mqttClient = new Paho.Client(endpointUrl.replace("wss://", "ws://"), clientId);
-
-        const connectOptions = {
-          useSSL: false,
-          mqttVersion: 4, // Ensure SSL is disabled
-          // timeout: 3,
-          invocationContext: { host: endpointUrl },
-          onSuccess: () => subscribe(mqttClient),
-          onFailure: (e: any) => { 
-            debugger
-            console.error("Connection failed:", e);
-          }
-        };
-
-        debugger
-        mqttClient.connect(connectOptions);
-        mqttClient.onMessageArrived = onMessage;
-        mqttClient.onConnectionLost = (e: any) =>
-          console.log("Connection lost:", e);
-
-        setClient(mqttClient);
-      } catch (error) {
-        console.error("Error initializing MQTT client:", error);
-      }
-    };
-
-    initializeClient();
-
-    return () => {
-      client?.disconnect();
-    };
-  }, []);
-
-  function subscribe(client: Paho.Client) {
-    debugger
-    client?.subscribe("things/dht11_01");
-    console.log("Subscribed to topic: things/dht11_01");
-  }
-
-  function onMessage(message: Paho.Message) {
-    const status = JSON.parse(message.payloadString);
-    console.log("Message received:", status);
-    // Handle message data, e.g., update chartData here
-  }
 
   useEffect(() => {
     const interval = setInterval(() => {
