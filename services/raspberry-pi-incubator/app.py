@@ -116,7 +116,7 @@ def light_control():
 def start_camera():
     global cap
     cap = cv2.VideoCapture(0)
-    return redirect(url_for('camera'))
+    return redirect(url_for('index'))
 
 @app.route('/stop_camera')
 def stop_camera():
