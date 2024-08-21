@@ -7,7 +7,8 @@ app = Flask(__name__)
 FAN_PIN = 17
 TEMPERATURE_LIGHT_PIN = 4
 MOTOR_PIN = 27
-DHT11_PIN = 18
+DHT11_PIN = 22
+
 
 
 GPIO.setmode(GPIO.BCM)
@@ -23,6 +24,45 @@ cap = None
 @app.route('/index')
 def index():
     return render_template('camera.html')
+
+# define a route to check status of all devices and the DHT11 sensor connected to the Raspberry Pi
+@app.route("/status", methods=["GET"])
+def status():
+    status = {
+        "fan": GPIO.input(FAN_PIN),
+        "temperature_light": GPIO.input(TEMPERATURE_LIGHT_PIN),
+        "motor": GPIO.input(MOTOR_PIN)
+    }
+    return status
+
+# define a route to turn on all devices
+@app.route("/all_on", methods=["GET"])
+def all_on():
+    GPIO.output(FAN_PIN, GPIO.HIGH)
+    GPIO.output(TEMPERATURE_LIGHT_PIN, GPIO.HIGH)
+    GPIO.output(MOTOR_PIN, GPIO.HIGH)
+    
+    response = app.response_class(
+            response="{'status': 'success'}",
+            status=200,
+            mimetype='application/json'
+    )
+    return response
+
+#define a route to turn off all devices
+@app.route("/all_off", methods=["GET"])
+def all_off():
+    GPIO.output(FAN_PIN, GPIO.LOW)
+    GPIO.output(TEMPERATURE_LIGHT_PIN, GPIO.LOW)
+    GPIO.output(MOTOR_PIN, GPIO.LOW)
+    
+    response = app.response_class(
+            response="{'status': 'success'}",
+            status=200,
+            mimetype='application/json'
+    )
+    return response
+
 
 # define a route for the Motor control via relay at MOTOR_PIN
 @app.route("/motor_control", methods=["GET"])
