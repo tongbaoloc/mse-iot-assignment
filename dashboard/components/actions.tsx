@@ -29,10 +29,21 @@ const Actions = () => {
   }, []);
 
   const handleSwitchChange = async (device: keyof typeof deviceStatus) => {
-    const newStatus = deviceStatus[device] === 1 ? 0 : 1;
+
+    const newStatus = deviceStatus[device] === 1 ? "Off" : "On";
+
+    let deviceUrl = ""
+
+    if (device === "temperature_light") {
+      deviceUrl = "light_control";
+    } else if (device === "fan") {
+      deviceUrl = "fan_control";
+    } else if (device === "motor") {
+      deviceUrl = "motor_control";
+    }
 
     try {
-      const response = await fetch(`${API_URL}/status?${device}=${newStatus}`, {
+      const response = await fetch(`${API_URL}/${deviceUrl}?action=${newStatus}`, {
         method: "GET",
       });
 
