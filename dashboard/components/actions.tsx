@@ -5,7 +5,7 @@ import { Label } from "./ui/label";
 import { Switch } from "@/components/ui/switch";
 
 // const API_URL = "http://192.168.2.16:5000";
-const API_URL = "https://d137-125-235-236-53.ngrok-free.app";
+const API_URL = "https://b347-125-235-236-53.ngrok-free.app";
 
 const Actions = () => {
   const [deviceStatus, setDeviceStatus] = useState({
@@ -18,10 +18,9 @@ const Actions = () => {
     // Fetch the initial status of the devices
     const fetchStatus = async () => {
       try {
-        // add headers to the fetch request
         const response = await fetch(`${API_URL}/status`, {
           headers: {
-            'ngrok-skip-browser-warning': 'true' 
+            "ngrok-skip-browser-warning": "true",
           },
         });
         const data = await response.json();
@@ -35,10 +34,10 @@ const Actions = () => {
   }, []);
 
   const handleSwitchChange = async (device: keyof typeof deviceStatus) => {
+    const newStatus = deviceStatus[device] === 1 ? 0 : 1;
+    const action = newStatus === 1 ? "On" : "Off";
 
-    const newStatus = deviceStatus[device] === 1 ? "Off" : "On";
-
-    let deviceUrl = ""
+    let deviceUrl = "";
 
     if (device === "temperature_light") {
       deviceUrl = "light_control";
@@ -49,9 +48,9 @@ const Actions = () => {
     }
 
     try {
-      const response = await fetch(`${API_URL}/${deviceUrl}?action=${newStatus}`, {
+      const response = await fetch(`${API_URL}/${deviceUrl}?action=${action}`, {
         headers: {
-          'ngrok-skip-browser-warning': 'true' 
+          "ngrok-skip-browser-warning": "true",
         },
         method: "GET",
       });
