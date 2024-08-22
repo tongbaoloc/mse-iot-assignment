@@ -34,8 +34,11 @@ const chartConfig = {
 export default function TempChart() {
   const [chartData, setChartData] = React.useState<ChartData[]>([]);
   const [messages, setMessages] = React.useState<ChartData[]>([]);
+  const [isHydrated, setIsHydrated] = React.useState(false); // State to manage hydration
 
   React.useEffect(() => {
+    setIsHydrated(true); // This ensures the component only renders once it's hydrated
+
     const device = createIoTDevice();
 
     device.on("connect", () => {
@@ -65,13 +68,18 @@ export default function TempChart() {
     };
   }, []);
 
+  if (!isHydrated) {
+    // This prevents the component from rendering until hydration is complete
+    return null;
+  }
+
   const replayMessages = () => {
     setChartData(messages.slice(-10));
   };
 
   return (
     <Card>
-      <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row min-h-[21rem]">
+      <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
           <CardTitle>Temperature Time Series</CardTitle>
           <CardDescription>
