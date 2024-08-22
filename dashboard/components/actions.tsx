@@ -32,12 +32,8 @@ const Actions = () => {
     const newStatus = deviceStatus[device] === 1 ? 0 : 1;
 
     try {
-      const response = await fetch(`${API_URL}/status`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ [device]: newStatus }),
+      const response = await fetch(`${API_URL}/status?${device}=${newStatus}`, {
+        method: "GET",
       });
 
       if (response.ok) {
