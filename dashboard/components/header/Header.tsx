@@ -15,10 +15,12 @@ const Header = () => {
   const { setTheme } = useTheme();
 
   return (
-    <nav className="flex items-center justify-between container mt-2">
-      <h1 className="text-4xl font-bold  bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400 inline-block text-transparent bg-clip-text">
-        IoT-Based Chicken Egg Incubator
-      </h1>
+    <nav className="flex items-center justify-center container mt-2">
+      <div className="mr-12">
+        <h1 className="text-4xl font-bold">
+          Chicken Egg Incubator IOT Monitoring Dashboard
+        </h1>
+      </div>
       <div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
