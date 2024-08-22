@@ -1,8 +1,11 @@
 from flask import Flask, render_template, request, Response,redirect,url_for
 import RPi.GPIO as GPIO
 import cv2
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"*": {"origins": "*"}})
+CORS(app)
 
 FAN_PIN = 17
 TEMPERATURE_LIGHT_PIN = 4
