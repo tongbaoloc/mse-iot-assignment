@@ -5,7 +5,7 @@ import { Label } from "./ui/label";
 import { Switch } from "@/components/ui/switch";
 
 // const API_URL = "http://192.168.2.16:5000";
-const API_URL = "https://b347-125-235-236-53.ngrok-free.app";
+const API_URL = "https://62ec-125-235-236-53.ngrok-free.app";
 
 const Actions = () => {
   const [deviceStatus, setDeviceStatus] = useState({
