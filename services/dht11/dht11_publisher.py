@@ -1,3 +1,4 @@
+import random
 from awscrt import io, mqtt, auth, http
 from awsiot import mqtt_connection_builder
 import time
@@ -13,6 +14,8 @@ PATH_TO_CERT = "certificate.pem.crt"
 PATH_TO_KEY = "private.pem.key"
 PATH_TO_ROOT = "AmazonRootCA1.pem"
 TOPIC = "things/dht11_01"
+
+DRY_RUN = True
 
 # Sensor Setup
 dht_pin = board.D22 # GPIO22
@@ -47,8 +50,15 @@ print('Begin Publish')
 try:
     while True:
         try:
-            t = dht_sensor.temperature
-            h = dht_sensor.humidity
+            if DRY_RUN:
+                # give me an array values of 37.1 to 40.
+                t_testing = [37.1, 37.4, 37.7, 38.6, 38.3, 38.79, 39.2, 39.3, 39.6, 40.1]
+                t = round(random.uniform(37.1, 37.9), 1)
+                h = round(random.uniform(50, 65), 1)
+            else:
+                t = dht_sensor.temperature
+                h = dht_sensor.humidity
+                
             if t is not None and h is not None:
                 message = {"id": CLIENT_ID, "Temperature": t, "Humidity": h, "timestamp": time.time()}
                 mqtt_connection.publish(topic=TOPIC, payload=json.dumps(message), qos=mqtt.QoS.AT_LEAST_ONCE)

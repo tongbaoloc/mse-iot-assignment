@@ -32,11 +32,11 @@ GPIO.setup(TEMPERATURE_LIGHT_PIN, GPIO.OUT)
 config_json = """
 {
     "actiondate": {
-        "begindate": "20/08/2024"
+        "begindate": "21/08/2024"
     },
     "incubator_setting": [
         {"day": 1, "temp": 37.8, "humid": 60, "to_humid": 61},
-        {"day": 2, "temp": 37.8, "humid": 60, "to_humid": 61},
+        {"day": 2, "temp": 37.2, "humid": 60, "to_humid": 61},
         {"day": 3, "temp": 37.8, "humid": 60, "to_humid": 61},
         {"day": 4, "temp": 37.8, "humid": 60, "to_humid": 61},
         {"day": 5, "temp": 37.8, "humid": 60, "to_humid": 61},
@@ -67,13 +67,15 @@ begindate_str = config_data['actiondate']['begindate']
 begindate = datetime.strptime(begindate_str, '%d/%m/%Y')
 
 
-
 # subscribe a message topic on AWS IoT Core
 def on_message_received(topic, payload, **kwargs):
+    
     print(f"Received message from topic '{topic}'")
+    
     try:
 
         payload_dict = json.loads(payload)
+        
         print("Payload:", payload_dict)
 
         # Extract real-time data from JSON payload
@@ -84,12 +86,17 @@ def on_message_received(topic, payload, **kwargs):
         current_date = datetime.now()
 
         # Calculate days since begindate
-        day_diff = (current_date - begindate).days + 1   
+        day_diff = (current_date - begindate).days + 1  
+        
+        print(f"Day difference: {day_diff}") 
 
         # Fetch the settings for the current day from the JSON config
         settings_data = next((item for item in config_data['incubator_setting'] if item['day'] == day_diff), None)
+        
+        print(f"Settings for day {day_diff}: {settings_data}")
 
         if settings_data:
+            
             config_temp = settings_data['temp']
             config_humid = settings_data['humid']
             config_to_humid = settings_data['to_humid']
@@ -99,13 +106,16 @@ def on_message_received(topic, payload, **kwargs):
             print(f"Real-time Temp: {temperature}, Real-time Humidity: {humidity}")
              
             if temperature > config_temp:
+                
                 print("Temperature exceeds the limit, turning off LED.")
                 # Turn off Light
                 GPIO.output(TEMPERATURE_LIGHT_PIN, GPIO.LOW)
                 # Turn on Fan
                 GPIO.output(FAN_PIN, GPIO.HIGH)
             else:
+                
                 print("Temperature is within the limit, keeping LED on.")
+                
                 GPIO.output(TEMPERATURE_LIGHT_PIN, GPIO.HIGH)
 
             if humidity < config_humid or humidity > config_humid :
