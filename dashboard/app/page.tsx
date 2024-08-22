@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 import Actions from "@/components/actions";
 import Humidity from "@/components/humidity-chart";
 import LastTempChart from "@/components/last-temp-chart";

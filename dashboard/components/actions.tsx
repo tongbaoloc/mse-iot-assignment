@@ -4,7 +4,8 @@ import React, { useEffect, useState } from "react";
 import { Label } from "./ui/label";
 import { Switch } from "@/components/ui/switch";
 
-const API_URL = "http://192.168.2.16:5000";
+// const API_URL = "http://192.168.2.16:5000";
+const API_URL = "https://d137-125-235-236-53.ngrok-free.app";
 
 const Actions = () => {
   const [deviceStatus, setDeviceStatus] = useState({
@@ -17,7 +18,12 @@ const Actions = () => {
     // Fetch the initial status of the devices
     const fetchStatus = async () => {
       try {
-        const response = await fetch(`${API_URL}/status`);
+        // add headers to the fetch request
+        const response = await fetch(`${API_URL}/status`, {
+          headers: {
+            'ngrok-skip-browser-warning': 'true' 
+          },
+        });
         const data = await response.json();
         setDeviceStatus(data);
       } catch (error) {
@@ -44,6 +50,9 @@ const Actions = () => {
 
     try {
       const response = await fetch(`${API_URL}/${deviceUrl}?action=${newStatus}`, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true' 
+        },
         method: "GET",
       });
 
