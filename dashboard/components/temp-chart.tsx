@@ -16,20 +16,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { createIoTDevice } from "@/utils/awsIoTUtils";
 
-// Initial chart data
-const initialChartData = [
-  { date: "2024-04-01T00:00:00", temp: 22 },
-  { date: "2024-04-01T00:00:05", temp: 14 },
-  { date: "2024-04-01T00:00:10", temp: 55 },
-  { date: "2024-04-01T00:00:15", temp: 25 },
-  { date: "2024-04-01T00:00:20", temp: 65 },
-  { date: "2024-04-01T00:00:25", temp: 74 },
-  { date: "2024-04-01T00:00:30", temp: 96 },
-  { date: "2024-04-01T00:00:35", temp: 35 },
-  { date: "2024-04-01T00:00:40", temp: 83 },
-  { date: "2024-04-01T00:00:45", temp: 76 },
-];
+// Define the type for chart data
+interface ChartData {
+  date: string;
+  temp: number;
+}
 
 const chartConfig = {
   temp: {
@@ -39,32 +32,54 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function TempChart() {
-  const [chartData, setChartData] = React.useState(initialChartData);
+  const [chartData, setChartData] = React.useState<ChartData[]>([]);
+  const [messages, setMessages] = React.useState<ChartData[]>([]);
 
   React.useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      const newTemp = Math.floor(Math.random() * 100); // Random temperature value
-      const newEntry = {
-        date: now.toISOString(),
-        temp: newTemp,
+    const device = createIoTDevice();
+
+    device.on("connect", () => {
+      device.subscribe("things/dht11_01");
+      console.log("Connected to AWS IoT!");
+    });
+
+    device.on("message", (topic: string, payload: any) => {
+      const message = JSON.parse(payload.toString());
+      const newEntry: ChartData = {
+        date: new Date(message.timestamp * 1000).toISOString(),
+        temp: message.Temperature,
       };
+
+      setMessages((prevMessages) => [...prevMessages, newEntry]);
 
       // Update chart data by adding the new entry and keeping only the last 10 entries
       setChartData((prevData) => [...prevData, newEntry].slice(-10));
-    }, 5000); // Update every 5 seconds
+    });
 
-    return () => clearInterval(interval); // Cleanup on unmount
+    device.on("error", (error: any) => {
+      console.error("Error:", error);
+    });
+
+    return () => {
+      device.end();
+    };
   }, []);
+
+  const replayMessages = () => {
+    setChartData(messages.slice(-10));
+  };
 
   return (
     <Card>
-      <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
+      <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row min-h-[21rem]">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-          <CardTitle>Temperature Chart</CardTitle>
+          <CardTitle>Temperature Time Series</CardTitle>
           <CardDescription>
-            Real-time temperature of the device (updates every 5 seconds)
+            Real-time temperature of the device (updates every 2 seconds)
           </CardDescription>
+          {/* <button onClick={replayMessages} className="mt-2">
+            Replay Last 10 Messages
+          </button> */}
         </div>
       </CardHeader>
       <CardContent className="px-2 sm:p-6">

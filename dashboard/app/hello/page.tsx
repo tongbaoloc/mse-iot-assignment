@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { createIoTDevice } from "@/utils/awsIoTUtils"; // Regular import
 
 const Hello = () => {
-  useEffect(() => {
+  const handleClick = () => {
+    // useEffect(() => {
     const device = createIoTDevice();
 
     device.on("connect", () => {
@@ -23,11 +24,14 @@ const Hello = () => {
     return () => {
       device.end();
     };
-  }, []);
+    // }, []);
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen min-w-screen">
-      <Button>Connect And Subscribe to AWS IoT</Button>
+      <Button onClick={() => handleClick()}>
+        Connect And Subscribe to AWS IoT
+      </Button>
     </div>
   );
 };
