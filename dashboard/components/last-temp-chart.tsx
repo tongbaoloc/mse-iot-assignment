@@ -16,11 +16,11 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { createIoTDevice } from "@/utils/awsIoTUtils"; // Assume this utility sets up the IoT connection
+import { createIoTDevice } from "@/utils/awsIoTUtils";
 
 const chartConfig = {
   type: {
-    label: "Humidity",
+    label: "Temperature",
   },
   safari: {
     label: "Safari",
@@ -28,9 +28,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function Humidity() {
+export default function LastTempChart() {
   const [chartData, setChartData] = useState([
-    { type: "humidity", temp: 0, fill: "var(--color-safari)" },
+    { type: "temperature", temp: 0, fill: "var(--color-safari)" },
   ]);
   const [lastUpdated, setLastUpdated] = useState(new Date());
 
@@ -44,10 +44,10 @@ export default function Humidity() {
 
     device.on("message", (topic: string, payload: any) => {
       const message = JSON.parse(payload.toString());
-      const humidity = message.Humidity;
+      const temperature = message.Temperature;
 
       setChartData([
-        { type: "humidity", temp: humidity, fill: "var(--color-safari)" },
+        { type: "temperature", temp: temperature, fill: "var(--color-safari)" },
       ]);
       setLastUpdated(new Date());
     });
@@ -64,7 +64,7 @@ export default function Humidity() {
   return (
     <Card className="flex flex-col min-h-[21rem]">
       <CardHeader className="items-center pb-0">
-        <CardDescription>Real-time humidity levels</CardDescription>
+        <CardDescription>Real-time temperature levels</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -74,7 +74,7 @@ export default function Humidity() {
           <RadialBarChart
             data={chartData}
             startAngle={0}
-            endAngle={(chartData[0].temp / 100) * 360}
+            endAngle={(chartData[0].temp / 100) * 360} // End angle based on the temperature in °C
             innerRadius={80}
             outerRadius={140}
             barSize={15}
@@ -95,7 +95,7 @@ export default function Humidity() {
             <PolarRadiusAxis
               angle={90}
               type="number"
-              domain={[0, 100]}
+              domain={[0, 100]} // Set domain to match the temperature range
               tick={false}
               tickLine={false}
               axisLine={false}
@@ -115,14 +115,14 @@ export default function Humidity() {
                           y={viewBox.cy}
                           className="fill-foreground text-4xl font-bold"
                         >
-                          {chartData[0].temp.toLocaleString()}%
+                          {chartData[0].temp.toLocaleString()}°C
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Humidity
+                          Temperature
                         </tspan>
                       </text>
                     );
