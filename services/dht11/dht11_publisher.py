@@ -68,7 +68,7 @@ try:
             
         except RuntimeError as error:
             print(f"Failed to read sensor: {error}")
-        time.sleep(3)
+        time.sleep(10)
 
 except KeyboardInterrupt:
     print('Publish End. Disconnecting...')

@@ -5,7 +5,7 @@ import { Label } from "./ui/label";
 import { Switch } from "@/components/ui/switch";
 import { motion } from "framer-motion";
 
-const API_URL = "https://b347-125-235-236-53.ngrok-free.app";
+const API_URL = "https://bd8f-125-235-236-53.ngrok-free.app";
 
 const Actions = () => {
   const [deviceStatus, setDeviceStatus] = useState({
