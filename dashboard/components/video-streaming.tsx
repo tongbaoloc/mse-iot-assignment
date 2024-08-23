@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Switch } from "@/components/ui/switch";
-import { Loader } from "lucide-react";
+import { Loader, LoaderCircle, LoaderPinwheel, VideoOff } from "lucide-react";
 import { motion } from "framer-motion";
 
 const API_URL = "https://db2c-125-235-236-53.ngrok-free.app/index";
@@ -62,7 +62,11 @@ const VideoStreaming = () => {
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
             >
-              <Loader size={48} />
+              {/* <Loader size={48} /> */}
+              <LoaderCircle
+                size={36}
+                className="text-gray-700 dark:text-gray-200"
+              />
             </motion.div>
           ) : (
             <motion.div
@@ -70,7 +74,10 @@ const VideoStreaming = () => {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
-              Camera is off
+              <VideoOff
+                size={30}
+                className="dark:text-gray-200 text-gray-700"
+              />
             </motion.div>
           )}
         </div>
