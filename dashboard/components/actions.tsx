@@ -30,7 +30,7 @@ const Actions = () => {
       }
     };
 
-    fetchStatus(setInterval(fetchStatus, 3000));
+    setInterval(() => fetchStatus(), 3000);
   }, []);
 
   const handleSwitchChange = async (device: keyof typeof deviceStatus) => {
