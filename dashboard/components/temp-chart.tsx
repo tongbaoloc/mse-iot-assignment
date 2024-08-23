@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
-import { motion } from "framer-motion";
 
 import {
   Card,
@@ -79,86 +78,72 @@ export default function TempChart() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Card>
-        <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
-          <motion.div
-            className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6"
-            initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5 }}
+    <Card>
+      <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
+        <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
+          <CardTitle>Temperature Time Series</CardTitle>
+          <CardDescription>
+            Real-time temperature of the device (updates every 2 seconds)
+          </CardDescription>
+          {/* <button onClick={replayMessages} className="mt-2">
+            Replay Last 10 Messages
+          </button> */}
+        </div>
+      </CardHeader>
+      <CardContent className="px-2 sm:p-6">
+        <ChartContainer
+          config={chartConfig}
+          className="aspect-auto h-[250px] w-full"
+        >
+          <LineChart
+            accessibilityLayer
+            data={chartData}
+            margin={{
+              left: 12,
+              right: 12,
+            }}
           >
-            <CardTitle>Temperature Time Series</CardTitle>
-            <CardDescription>
-              Real-time temperature of the device (updates every 2 seconds)
-            </CardDescription>
-          </motion.div>
-        </CardHeader>
-        <CardContent className="px-2 sm:p-6">
-          <ChartContainer
-            config={chartConfig}
-            className="aspect-auto h-[250px] w-full"
-          >
-            <LineChart
-              accessibilityLayer
-              data={chartData}
-              margin={{
-                left: 12,
-                right: 12,
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              minTickGap={32}
+              tickFormatter={(value) => {
+                const date = new Date(value);
+                return date.toLocaleTimeString("en-US", {
+                  hour: "numeric",
+                  minute: "numeric",
+                  second: "numeric",
+                });
               }}
-            >
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="date"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                minTickGap={32}
-                tickFormatter={(value) => {
-                  const date = new Date(value);
-                  return date.toLocaleTimeString("en-US", {
-                    hour: "numeric",
-                    minute: "numeric",
-                    second: "numeric",
-                  });
-                }}
-              />
-              <ChartTooltip
-                content={
-                  <ChartTooltipContent
-                    className="w-[150px]"
-                    nameKey="temp"
-                    labelFormatter={(value) => {
-                      return new Date(value).toLocaleTimeString("en-US", {
-                        hour: "numeric",
-                        minute: "numeric",
-                        second: "numeric",
-                      });
-                    }}
-                  />
-                }
-              />
-              <motion.g
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                <Line
-                  dataKey="temp"
-                  type="monotone"
-                  stroke={`var(--color-temp)`}
-                  strokeWidth={2}
-                  dot={false}
+            />
+            <ChartTooltip
+              content={
+                <ChartTooltipContent
+                  className="w-[150px]"
+                  nameKey="temp"
+                  labelFormatter={(value) => {
+                    return new Date(value).toLocaleTimeString("en-US", {
+                      hour: "numeric",
+                      minute: "numeric",
+                      second: "numeric",
+                    });
+                  }}
                 />
-              </motion.g>
-            </LineChart>
-          </ChartContainer>
-        </CardContent>
-      </Card>
-    </motion.div>
+              }
+            />
+            <Line
+              dataKey="temp"
+              type="monotone"
+              stroke={`var(--color-temp)`}
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
   );
 }
