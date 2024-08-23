@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import { Label } from "./ui/label";
 import { Switch } from "@/components/ui/switch";
 
-const API_URL = "http://192.168.2.16:5000";
-// const API_URL = "https://db2c-125-235-236-53.ngrok-free.app";
+// const API_URL = "http://192.168.4.148:5000";
+const API_URL = "https://d3b0-118-69-180-7.ngrok-free.app";
 
 const Actions = () => {
   const [deviceStatus, setDeviceStatus] = useState({

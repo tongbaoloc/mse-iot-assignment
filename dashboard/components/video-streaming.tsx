@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Loader, VideoOff } from "lucide-react";
 import { motion } from "framer-motion";
 
-const API_URL = "http://192.168.2.16:5000";
+const API_URL = "http://192.168.4.148:5000";
 // const API_URL = "https://db2c-125-235-236-53.ngrok-free.app/index";
 
 const VideoStreaming = () => {
@@ -58,11 +58,11 @@ const VideoStreaming = () => {
       ) : (
         <div className="w-full h-full max-w-full max-h-[18rem] flex items-center justify-center p-4">
           <iframe
-            src="https://www.youtube.com/embed/v_QruFR_9ak"
+            src="http://192.168.4.148:5000/index"
             title="YouTube video player"
             width="100%"
             height="100%"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            // allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             className="rounded-lg border border-gray-300 dark:border-gray-600 shadow-md"
           ></iframe>
