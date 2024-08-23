@@ -21,7 +21,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",
-    "framer-motion": "^11.3.24",
+    "framer-motion": "^11.3.29",
     "lucide-react": "^0.427.0",
     "moment": "^2.30.1",
     "mqtt": "^5.10.0",

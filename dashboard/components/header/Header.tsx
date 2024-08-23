@@ -10,18 +10,33 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { motion } from "framer-motion";
 
 const Header = () => {
   const { setTheme } = useTheme();
 
   return (
-    <nav className="flex items-center justify-center container mt-2">
-      <div className="mr-12">
+    <motion.nav
+      className="flex items-center justify-center container mt-2"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
+      <motion.div
+        className="mr-12"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+      >
         <h1 className="text-4xl font-bold">
           Chicken Egg Incubator IOT Monitoring Dashboard
         </h1>
-      </div>
-      <div>
+      </motion.div>
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.4, delay: 0.4, ease: "easeOut" }}
+      >
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon">
@@ -42,8 +57,8 @@ const Header = () => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
-    </nav>
+      </motion.div>
+    </motion.nav>
   );
 };
 
