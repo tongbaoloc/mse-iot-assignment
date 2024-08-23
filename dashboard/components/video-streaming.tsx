@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Switch } from "@/components/ui/switch";
-import { Loader, LoaderCircle, LoaderPinwheel, VideoOff } from "lucide-react";
+import { Loader, VideoOff } from "lucide-react";
 import { motion } from "framer-motion";
 
 const API_URL = "http://192.168.2.16:5000";
@@ -40,7 +40,7 @@ const VideoStreaming = () => {
 
   return (
     <motion.div
-      className="min-h-[21rem] border rounded-lg flex flex-col items-center justify-center"
+      className="min-h-[21rem] border rounded-lg flex flex-col items-center justify-center  dark:bg-gray-800"
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
@@ -50,20 +50,35 @@ const VideoStreaming = () => {
           src={videoSrc}
           autoPlay
           controls
-          className="rounded-lg"
+          className="w-full h-full max-w-full max-h-[18rem] rounded-lg border border-gray-300 dark:border-gray-600 shadow-md"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         />
       ) : (
-        <div className="dark:text-gray-200">
+        <div className="w-full h-full max-w-full max-h-[18rem] flex items-center justify-center p-4">
           <iframe
-            src="http://192.168.2.16:5000/index"
-            title="Video Stream"
-            style={{ width: "100%", height: "100%" }}
-            className="rounded-lg"/>
+            src="https://www.youtube.com/embed/v_QruFR_9ak"
+            title="YouTube video player"
+            width="100%"
+            height="100%"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="rounded-lg border border-gray-300 dark:border-gray-600 shadow-md"
+          ></iframe>
         </div>
       )}
+      {/* <motion.div
+        className="flex mt-4 border px-2 py-4 rounded-lg bg-white dark:bg-gray-700"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <Switch checked={isCameraOn} onCheckedChange={setIsCameraOn} />
+        <label className="ml-2 dark:text-gray-300">
+          Turn {isCameraOn ? "Off" : "On"} Camera
+        </label>
+      </motion.div> */}
     </motion.div>
   );
 };
