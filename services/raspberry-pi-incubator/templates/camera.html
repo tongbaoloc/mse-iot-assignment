@@ -4,14 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camera Control</title>
 </head>
 
 <body>
-    <h1>Camera Control</h1>
-    <button onclick="location.href='/start_camera'">Start Camera</button>
-    <button onclick="location.href='/stop_camera'">Stop Camera</button>
-    {% comment %} <button onclick="location.href='/toggle_face_detection'">Toggle Face Detection</button> {% endcomment %}
     <div>
         <img src="{{ url_for('video_feed') }}" alt="Camera Feed">
     </div>

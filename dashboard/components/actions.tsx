@@ -3,9 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { Label } from "./ui/label";
 import { Switch } from "@/components/ui/switch";
-import { motion } from "framer-motion";
 
-const API_URL = "https://bd8f-125-235-236-53.ngrok-free.app";
+const API_URL = "http://192.168.2.16:5000";
+// const API_URL = "https://db2c-125-235-236-53.ngrok-free.app";
 
 const Actions = () => {
   const [deviceStatus, setDeviceStatus] = useState({
@@ -30,8 +30,7 @@ const Actions = () => {
       }
     };
 
-    fetchStatus();
-    setInterval(fetchStatus, 5000);
+    fetchStatus(setInterval(fetchStatus, 3000));
   }, []);
 
   const handleSwitchChange = async (device: keyof typeof deviceStatus) => {
@@ -70,18 +69,8 @@ const Actions = () => {
   };
 
   return (
-    <motion.div
-      className="min-h-[21rem]"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <motion.div
-        className="flex items-center justify-between border px-2 py-4 rounded-lg"
-        initial={{ x: -50, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
+    <div className="min-h-[21rem]">
+      <div className="flex items-center justify-between border px-2 py-4 rounded-lg">
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label className="dark:text-inherit" htmlFor="temperature_light">
             Temperature light
@@ -94,13 +83,8 @@ const Actions = () => {
           checked={deviceStatus.temperature_light === 1}
           onCheckedChange={() => handleSwitchChange("temperature_light")}
         />
-      </motion.div>
-      <motion.div
-        className="flex items-center justify-between border px-2 py-4 rounded-lg mt-4"
-        initial={{ x: -50, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
+      </div>
+      <div className="flex items-center justify-between border px-2 py-4 rounded-lg mt-4">
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label className="dark:text-inherit " htmlFor="fan">
             Fan - 1
@@ -113,13 +97,8 @@ const Actions = () => {
           checked={deviceStatus.fan === 1}
           onCheckedChange={() => handleSwitchChange("fan")}
         />
-      </motion.div>
-      <motion.div
-        className="flex items-center justify-between border px-2 py-4 rounded-lg mt-4"
-        initial={{ x: -50, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-      >
+      </div>
+      <div className="flex items-center justify-between border px-2 py-4 rounded-lg mt-4">
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label className="dark:text-inherit " htmlFor="motor">
             Motor - 1
@@ -132,8 +111,8 @@ const Actions = () => {
           checked={deviceStatus.motor === 1}
           onCheckedChange={() => handleSwitchChange("motor")}
         />
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 

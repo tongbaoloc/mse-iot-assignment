@@ -5,7 +5,8 @@ import { Switch } from "@/components/ui/switch";
 import { Loader, LoaderCircle, LoaderPinwheel, VideoOff } from "lucide-react";
 import { motion } from "framer-motion";
 
-const API_URL = "https://db2c-125-235-236-53.ngrok-free.app/index";
+const API_URL = "http://192.168.2.16:5000";
+// const API_URL = "https://db2c-125-235-236-53.ngrok-free.app/index";
 
 const VideoStreaming = () => {
   const [isCameraOn, setIsCameraOn] = useState(false);
@@ -56,43 +57,13 @@ const VideoStreaming = () => {
         />
       ) : (
         <div className="dark:text-gray-200">
-          {isCameraOn ? (
-            <motion.div
-              className="flex items-center justify-center"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            >
-              {/* <Loader size={48} /> */}
-              <LoaderCircle
-                size={36}
-                className="text-gray-700 dark:text-gray-200"
-              />
-            </motion.div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <VideoOff
-                size={30}
-                className="dark:text-gray-200 text-gray-700"
-              />
-            </motion.div>
-          )}
+          <iframe
+            src="http://192.168.2.16:5000/index"
+            title="Video Stream"
+            style={{ width: "100%", height: "100%" }}
+            className="rounded-lg"/>
         </div>
       )}
-      <motion.div
-        className="flex mt-4 border px-2 py-4 rounded-lg"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-      >
-        <Switch checked={isCameraOn} onCheckedChange={setIsCameraOn} />
-        <label className="ml-2 dark:text-gray-300">
-          Turn {isCameraOn ? "Off" : "On"} Camera
-        </label>
-      </motion.div>
     </motion.div>
   );
 };
