@@ -58,7 +58,7 @@ const VideoStreaming = () => {
       ) : (
         <div className="w-full h-full max-w-full max-h-[18rem] flex items-center justify-center p-4">
           <iframe
-            src="http://192.168.4.148:5000/index"
+            src="http://192.168.1.47:5000/index"
             title="YouTube video player"
             width="100%"
             height="100%"
