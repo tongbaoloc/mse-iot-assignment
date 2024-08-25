@@ -229,6 +229,10 @@ To run the application, follow these steps:
 - [Next.js Documentation](https://nextjs.org/docs/getting-started)
 - [AWS Lambda Documentation](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)
 
+## Mentor
+- [Dr Tran Ngoc Hoang](@gmail.com)
+
+
 ## Contributors
 
 - [Loc Tong](loctong@gmail.com)
